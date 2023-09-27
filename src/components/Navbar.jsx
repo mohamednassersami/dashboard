@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
+import { HiOutlineSearch } from 'react-icons/hi';
 import { FiShoppingCart } from 'react-icons/fi';
 import { BsChatLeft } from 'react-icons/bs';
 import { RiNotification3Line } from 'react-icons/ri';
@@ -15,13 +16,17 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
     <button
       type="button"
       onClick={customFunc}
-      style={{ color }}
-      className="relative rounded-full p-3 text-xl hover:bg-light-gray"
+      style={{ color, position: dotColor ? 'relative' : '' }}
+      className={`rounded-full p-3 ${
+        title !== 'Chat' ? 'text-xl' : 'text-lg'
+      } hover:bg-light-gray`}
     >
-      <span
-        style={{ background: dotColor }}
-        className="absolute right-2 top-2 inline-flex h-2 w-2 rounded-full"
-      />
+      {dotColor && (
+        <span
+          style={{ background: dotColor }}
+          className="absolute right-2 top-2 inline-flex h-2 w-2 rounded-full"
+        />
+      )}
       {icon}
     </button>
   </TooltipComponent>
@@ -29,12 +34,12 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
 
 const Navbar = () => {
   const {
-    activeMenu,
     setActiveMenu,
     isClicked,
     handleClick,
     screenSize,
     setScreenSize,
+    currentColor,
   } = useStateContext();
 
   useEffect(() => {
@@ -57,18 +62,26 @@ const Navbar = () => {
 
   return (
     <div className="relative flex justify-between p-2 md:mx-6">
-      <NavButton
-        title="Menu"
-        customFunc={() => setActiveMenu((prevActiveMenu) => !prevActiveMenu)}
-        color="blue"
-        icon={<AiOutlineMenu />}
-      />
+      <div className="flex">
+        <NavButton
+          title="Menu"
+          customFunc={() => setActiveMenu((prevActiveMenu) => !prevActiveMenu)}
+          color={currentColor}
+          icon={<AiOutlineMenu />}
+        />
+        <NavButton
+          HiOutlineSearch
+          title="Search"
+          color={currentColor}
+          icon={<HiOutlineSearch />}
+        />
+      </div>
 
       <div className="flex">
         <NavButton
           title="Cart"
           customFunc={() => handleClick('cart')}
-          color="blue"
+          color={currentColor}
           icon={<FiShoppingCart />}
         />
 
@@ -76,7 +89,7 @@ const Navbar = () => {
           title="Chat"
           dotColor="#03C9D7"
           customFunc={() => handleClick('chat')}
-          color="blue"
+          color={currentColor}
           icon={<BsChatLeft />}
         />
 
@@ -84,7 +97,7 @@ const Navbar = () => {
           title="Notifications"
           dotColor="#03C9D7"
           customFunc={() => handleClick('notification')}
-          color="blue"
+          color={currentColor}
           icon={<RiNotification3Line />}
         />
 
